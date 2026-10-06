@@ -75,3 +75,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .music-credit { padding: 0 20px 24px; background: transparent; font-size: 10px; }
 .music-credit summary { cursor: pointer; color: #887b66; min-height: 44px; padding: 14px; width: fit-content; margin: auto; }
 .music-credit > div { max-width: 360px; margin: 0 auto; padding: 8px 0 14px; }
+
+/* Guest information sits directly on the stationery, with feathered dividers. */
+.guest-notes { margin-top: 18px; padding: 0 10px; }
+.guest-note { position: relative; padding: 22px 4px; background: transparent; }
+.guest-note + .guest-note::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, #bda57e66 20%, #bda57e66 80%, transparent); }
+.guest-note .serif { color: #5f5241; }
+.guest-note .p { line-height: 1.8; margin-bottom: 0; }

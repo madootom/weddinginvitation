@@ -16,7 +16,9 @@
       function resize() {
         width = host.clientWidth; height = host.clientHeight;
         const dpr = Math.min(devicePixelRatio || 1, 1.5);
-        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        const pixelWidth = Math.round(width * dpr), pixelHeight = Math.round(height * dpr);
+        if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+        if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       const observer = new ResizeObserver(resize); observer.observe(host); resize();

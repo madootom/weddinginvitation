@@ -69,7 +69,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 @media(max-height:580px) { .butterfly-emblem { width: 44px; } }
 
 .rain-garden { opacity: 1; }
-.rain-garden canvas { width: 100%; height: 100%; display: block; }
+.rain-garden canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .engagement-church { display: block; width: 100%; height: auto; margin-top: 18px; border-radius: 8px; }
 .organiser-link { display: block; margin: 22px auto 0; font-size: 9px; letter-spacing: .08em; text-transform: none; color: #877b68; min-height: 44px; padding: 10px 14px; }
 .music-credit { padding: 0 20px 24px; background: transparent; font-size: 10px; }

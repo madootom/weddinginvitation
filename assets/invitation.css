@@ -1,0 +1,77 @@
+/* Responsive ivory stationery; ornaments stay quiet until the invitation unfolds. */
+* { box-sizing: border-box; }
+body { background: radial-gradient(ellipse at 25% 12%, #fff9ea, transparent 55%), #e8e1d4; }
+.invitation-shell { padding: 24px !important; min-height: 100svh !important; }
+.invitation-card { width: min(100%, 720px) !important; height: calc(100svh - 48px) !important; min-height: 580px; border-radius: 180px 180px 8px 8px; }
+.guest-gate { isolation: isolate; padding: 36px clamp(24px, 8vw, 80px) !important; overflow-y: auto; }
+.guest-gate::before { content: ''; position: absolute; inset: 18px; border: 1px solid #b0925655; border-radius: 165px 165px 4px 4px; z-index: -1; pointer-events: none; }
+.guest-gate::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, #fffdf9ed 0%, #fffdf995 42%, transparent 78%); z-index: -2; pointer-events: none; }
+.guest-gate .script { width: auto !important; height: auto !important; font-size: clamp(40px, 7vw, 58px) !important; white-space: nowrap; margin-top: 20px !important; }
+.origami-emblem { width: 78px; color: #9f7b37; filter: drop-shadow(0 6px 9px #795d3020); transform: rotate(-9deg); }
+.origami-emblem svg { display: block; fill: #d6bd83; stroke: #a17c37; stroke-width: .65; }
+.origami-emblem .fold { fill: none; stroke: #fff9e8; stroke-width: 1.2; }
+.guest-gate .fld, .guest-gate .send { max-width: 340px; }
+.fld { min-height: 48px; font-size: 16px !important; border-radius: 6px; }
+.send, .openbtn, .choice { min-height: 48px; border-radius: 6px; }
+.send { background: linear-gradient(120deg, #967135, #76531e); box-shadow: 0 8px 22px #6c4f2425; }
+.send:disabled { opacity: .7; cursor: wait; }
+.send span { margin-left: 12px; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #826327; outline-offset: 4px; }
+.quiet { min-height: 44px; }
+#invitation-cover { padding: 38px !important; }
+#invitation-cover .script { font-size: clamp(38px, 6vw, 58px) !important; }
+#invitation-cover .script + .script { font-size: 32px !important; }
+.veil { transition: opacity .7s ease, visibility .7s ease; }
+.invitation-content { scroll-behavior: smooth; overscroll-behavior: contain; }
+.invitation-toolbar { width: 100% !important; height: auto !important; padding: 12px 20px !important; }
+.note { width: auto; min-height: 44px; height: auto; border-radius: 24px; padding: 10px 16px; gap: 8px; font-family: var(--sans); font-size: 12px; box-shadow: 0 3px 14px #3d2e1110; }
+.invitation-body { width: 100% !important; height: auto !important; min-height: 100%; padding: 20px clamp(22px, 6vw, 64px) 50px !important; }
+.invitation-body img { max-width: 100%; border-radius: 4px; }
+.panel { border-radius: 8px; }
+.music-credit { padding: 20px; text-align: center; font-size: 11px; line-height: 1.7; color: var(--ink-soft); background: #fffdf8; }
+.origami-canvas { position: fixed; inset: 0; z-index: 100; width: 100%; height: 100%; pointer-events: none; }
+.guest-gate.is-unfolding { animation: paper-release 1.35s ease forwards; pointer-events: none; }
+@keyframes paper-release { 0%, 15% { opacity: 1; filter: none; } 55% { opacity: .7; filter: brightness(1.12); } 100% { opacity: 0; transform: scale(.97); } }
+@media(max-width: 600px) {
+ .invitation-shell { padding: 0 !important; }
+ .invitation-card { width: 100% !important; height: 100svh !important; min-height: 440px; border: 0 !important; border-radius: 0; }
+ .guest-gate::before { inset: 14px; border-radius: 150px 150px 4px 4px; }
+ .guest-gate { padding: max(28px, env(safe-area-inset-top)) 30px max(28px, env(safe-area-inset-bottom)) !important; }
+ .invitation-body { padding-bottom: max(36px, env(safe-area-inset-bottom)) !important; }
+}
+@media(max-height: 580px) { .origami-emblem { width: 44px; } .guest-gate .hair { margin: 12px 0 !important; } .guest-gate .script { margin-top: 8px !important; } .guest-gate { justify-content: flex-start !important; } }
+@media(prefers-reduced-motion: reduce) {
+ *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+ .petal, .origami-canvas { display: none !important; }
+}
+/* A slower, softer atmosphere; all continuous movement has an explicit pause. */
+.invitation-shell { position: relative; }
+.invitation-toolbar { min-height: 46px; background: transparent !important; pointer-events: none; }
+.guest-gate.is-unfolding { animation: paper-release 2.6s cubic-bezier(.22,.61,.36,1) forwards; }
+.rise { animation-duration: 1.65s; }
+.send { background: linear-gradient(120deg, #aa8850, #92713d); box-shadow: 0 4px 18px #9d7e3120; border-radius: 12px; }
+.openbtn, .choice, .fld, .panel { border-radius: 12px; }
+.family-line { font: 12px/1.85 var(--sans); color: #756957; margin: 12px auto 22px; max-width: 330px; }
+.family-line strong { font-weight: 500; color: #544a3d; }
+.family-blessings { text-align: center; padding: 0 0 35px; }
+.family-blessings p { font-size: 23px; line-height: 1.45; margin: 14px 0 0; }
+.event-note { font-size: 12px; line-height: 1.8; margin-bottom: 0; color: #716652; }
+.rain-garden { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 65; opacity: .55; }
+.page-away *, .motion-paused .rain-garden *, .motion-paused .petal { animation-play-state: paused !important; }
+@media(max-width:360px) { .guest-gate .send { font-size: 12px !important; letter-spacing: .12em; } }
+@media(prefers-reduced-motion:reduce) { .rain-garden { display:none; } }
+.marble { background-color: #f4efe5; background-blend-mode: soft-light; }
+@media(max-height:580px) { .guest-gate { padding-top: 64px !important; } }
+
+.butterfly-emblem { width: 78px; transform: rotate(-9deg); filter: drop-shadow(0 4px 8px #bfa77725); }
+.butterfly-emblem svg { display: block; fill: #dfd0ae; stroke: #b79e6f; stroke-width: .7; }
+.butterfly-emblem .butterfly-body { fill: none; stroke: #a79066; stroke-width: 1.2; stroke-linecap: round; }
+@media(max-height:580px) { .butterfly-emblem { width: 44px; } }
+
+.rain-garden { opacity: 1; }
+.rain-garden canvas { width: 100%; height: 100%; display: block; }
+.engagement-church { display: block; width: 100%; height: auto; margin-top: 18px; border-radius: 8px; }
+.organiser-link { display: block; margin: 22px auto 0; font-size: 9px; letter-spacing: .08em; text-transform: none; color: #877b68; min-height: 44px; padding: 10px 14px; }
+.music-credit { padding: 0 20px 24px; background: transparent; font-size: 10px; }
+.music-credit summary { cursor: pointer; color: #887b66; min-height: 44px; padding: 14px; width: fit-content; margin: auto; }
+.music-credit > div { max-width: 360px; margin: 0 auto; padding: 8px 0 14px; }

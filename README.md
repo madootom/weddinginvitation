@@ -46,4 +46,4 @@ Music attribution is retained under an expandable Music credits disclosure. The 
 
 Ripple cadence: pointer movement produces at most one drop every 550 ms, subject to the active bloom spacing guard. Each impact releases two watercolor rings, separated by about 830 ms, with diffuse sand, sage or blue-grey pigment washes.
 
-Visible falling droplets travel for 0.7 seconds on interaction and 1–1.3 seconds naturally. Natural drops recur every 5–10 seconds. A bloom reserves its area until fully faded so slow or tightly clustered pointer movement cannot stack ripples.
+Soft, round translucent droplets travel for 1.5 seconds on interaction and 1.8–2.4 seconds naturally, without a pointed trail. Natural drops recur every 8–14 seconds. A bloom reserves its area until fully faded so slow or tightly clustered pointer movement cannot stack ripples.

@@ -39,7 +39,7 @@
         const x = (event.clientX - rect.left) / width, y = (event.clientY - rect.top) / height;
         if (x < 0 || x > 1 || y < 0 || y > 1) return;
         if (now - lastPointerDrop < 550) return;
-        if (addDrop(x, y, now, 700)) lastPointerDrop = now;
+        if (addDrop(x, y, now, 1500)) lastPointerDrop = now;
       }
       for (const event of ['pointermove', 'pointerdown', 'wheel']) document.addEventListener(event, interact, {passive: true});
       function draw(now) {
@@ -49,20 +49,22 @@
         previous = now; ctx.clearRect(0, 0, width, height);
         if (now >= nextDrop && width && height) {
           for (let attempt = 0; attempt < 6; attempt++) {
-            if (addDrop(.08 + Math.random() * .84, .2 + Math.random() * .68, now, 1000 + Math.random() * 300)) break;
+            if (addDrop(.08 + Math.random() * .84, .2 + Math.random() * .68, now, 1800 + Math.random() * 600)) break;
           }
-          nextDrop = now + 5000 + Math.random() * 5000;
+          nextDrop = now + 8000 + Math.random() * 6000;
         }
         drops = drops.filter(drop => {
           const age = (now - drop.born) / drop.duration;
           const x = drop.x * width, targetY = drop.y * height;
           if (age >= 1) { rings.push({x: drop.x, y: drop.y, born: now, radius: 42 + Math.random() * 32, pigment: [[164, 145, 105], [137, 153, 141], [146, 160, 166]][Math.floor(Math.random() * 3)]}); rings = rings.slice(-7); return false; }
-          const y = targetY - (1 - Math.pow(age, 1.45)) * 150;
-          const gradient = ctx.createLinearGradient(x, y - 18, x, y + 3);
-          gradient.addColorStop(0, 'rgba(150,157,151,0)'); gradient.addColorStop(1, 'rgba(139,148,136,.48)');
-          ctx.strokeStyle = gradient; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(x, y - 18); ctx.lineTo(x, y); ctx.stroke();
-          ctx.fillStyle = 'rgba(150,156,140,.4)'; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = 'rgba(255,253,240,.7)'; ctx.beginPath(); ctx.arc(x - .5, y - .7, .8, 0, Math.PI * 2); ctx.fill();
+          const y = targetY - (1 - age) * 110;
+          // A diffused bead of water: no pointed streak or directional tail.
+          const opacity = Math.min(1, age * 5) * .3;
+          const bead = ctx.createRadialGradient(x - .5, y - .6, .2, x, y, 4.5);
+          bead.addColorStop(0, `rgba(255,253,241,${opacity * 1.3})`);
+          bead.addColorStop(.38, `rgba(154,164,149,${opacity})`);
+          bead.addColorStop(1, 'rgba(154,164,149,0)');
+          ctx.fillStyle = bead; ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2); ctx.fill();
           return true;
         });
         rings = rings.filter(ring => {

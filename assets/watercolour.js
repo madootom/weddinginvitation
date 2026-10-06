@@ -32,9 +32,9 @@
         if (x < 0 || x > 1 || y < 0 || y > 1) return;
         const closeBy = lastPointerPosition && Math.hypot(event.clientX - lastPointerPosition.x, event.clientY - lastPointerPosition.y) < 24;
         // Tiny pointer jitter and repeated scroll events should feel like a quiet pool.
-        const delay = closeBy ? 1200 : event.type === 'pointerdown' ? 80 : 160;
+        const delay = closeBy ? 2200 : 550;
         if (now - lastPointerDrop < delay) return;
-        lastPointerDrop = now; lastPointerPosition = {x: event.clientX, y: event.clientY}; nextDrop = now + 1800;
+        lastPointerDrop = now; lastPointerPosition = {x: event.clientX, y: event.clientY}; nextDrop = now + 3000;
         drops.push({x, y, born: now, duration: event.type === 'pointerdown' ? 140 : 260});
         drops = drops.slice(-8);
       }
@@ -46,7 +46,7 @@
         previous = now; ctx.clearRect(0, 0, width, height);
         if (now >= nextDrop && width && height) {
           drops.push({x: .08 + Math.random() * .84, y: .16 + Math.random() * .76, born: now, duration: 650 + Math.random() * 400});
-          drops = drops.slice(-4); nextDrop = now + 1000 + Math.random() * 1300;
+          drops = drops.slice(-4); nextDrop = now + 2800 + Math.random() * 2200;
         }
         drops = drops.filter(drop => {
           const age = (now - drop.born) / drop.duration;

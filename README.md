@@ -44,4 +44,6 @@ The engagement card includes the couple-supplied church watercolour. Rain uses r
 
 Music attribution is retained under an expandable Music credits disclosure. The organiser tracker uses a quiet For the organisers link. Pointer movement, clicking and wheel scrolling create drops at the pointer position using passive, throttled listeners.
 
-Pointer movement within 24 pixels of the last drop is limited to one drop per 1.2 seconds; movement beyond that area retains the existing responsive rate.
+Pointer movement within 24 pixels of the last drop is limited to one drop per 2.2 seconds; movement beyond that area retains the existing responsive rate.
+
+Ripple cadence: pointer movement produces at most one drop every 550 ms; within 24 px of the previous drop, every 2.2 seconds. Ambient drops are spaced 2.8–5 seconds apart.

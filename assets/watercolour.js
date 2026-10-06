@@ -23,20 +23,23 @@
       }
       let resizeFrame = 0;
       const observer = new ResizeObserver(() => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(resize); }); observer.observe(host); resize();
-      let lastPointerDrop = -Infinity, lastPointerPosition = null;
+      let lastPointerDrop = -Infinity, occupied = [];
+      function addDrop(x, y, now, duration) {
+        occupied = occupied.filter(point => point.until > now);
+        // Reserve the entire watercolor bloom until it has faded, including drops in flight.
+        if (occupied.some(point => Math.hypot((x - point.x) * width, (y - point.y) * height / .48) < 175)) return false;
+        occupied.push({x, y, until: now + duration + 4600});
+        drops.push({x, y, born: now, duration});
+        return true;
+      }
       function interact(event) {
         if (stopped || media.matches || document.hidden || !width || !height) return;
         const now = performance.now();
         const rect = host.getBoundingClientRect();
         const x = (event.clientX - rect.left) / width, y = (event.clientY - rect.top) / height;
         if (x < 0 || x > 1 || y < 0 || y > 1) return;
-        const closeBy = lastPointerPosition && Math.hypot(event.clientX - lastPointerPosition.x, event.clientY - lastPointerPosition.y) < 24;
-        // Tiny pointer jitter and repeated scroll events should feel like a quiet pool.
-        const delay = closeBy ? 2200 : 550;
-        if (now - lastPointerDrop < delay) return;
-        lastPointerDrop = now; lastPointerPosition = {x: event.clientX, y: event.clientY};
-        drops.push({x, y, born: now, duration: event.type === 'pointerdown' ? 140 : 260});
-        drops = drops.slice(-8);
+        if (now - lastPointerDrop < 550) return;
+        if (addDrop(x, y, now, 700)) lastPointerDrop = now;
       }
       for (const event of ['pointermove', 'pointerdown', 'wheel']) document.addEventListener(event, interact, {passive: true});
       function draw(now) {
@@ -45,17 +48,21 @@
         if (now - previous < 1000 / 24) return;
         previous = now; ctx.clearRect(0, 0, width, height);
         if (now >= nextDrop && width && height) {
-          drops.push({x: .08 + Math.random() * .84, y: .16 + Math.random() * .76, born: now, duration: 650 + Math.random() * 400});
-          drops = drops.slice(-4); nextDrop = now + 8000 + Math.random() * 6000;
+          for (let attempt = 0; attempt < 6; attempt++) {
+            if (addDrop(.08 + Math.random() * .84, .2 + Math.random() * .68, now, 1000 + Math.random() * 300)) break;
+          }
+          nextDrop = now + 5000 + Math.random() * 5000;
         }
         drops = drops.filter(drop => {
           const age = (now - drop.born) / drop.duration;
           const x = drop.x * width, targetY = drop.y * height;
           if (age >= 1) { rings.push({x: drop.x, y: drop.y, born: now, radius: 42 + Math.random() * 32, pigment: [[164, 145, 105], [137, 153, 141], [146, 160, 166]][Math.floor(Math.random() * 3)]}); rings = rings.slice(-7); return false; }
-          const y = targetY - (1 - age) * (1 - age) * 105;
-          const gradient = ctx.createLinearGradient(x, y - 10, x, y + 3);
-          gradient.addColorStop(0, 'rgba(150,157,151,0)'); gradient.addColorStop(1, 'rgba(154,147,120,.23)');
-          ctx.strokeStyle = gradient; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y - 10); ctx.lineTo(x, y); ctx.stroke();
+          const y = targetY - (1 - Math.pow(age, 1.45)) * 150;
+          const gradient = ctx.createLinearGradient(x, y - 18, x, y + 3);
+          gradient.addColorStop(0, 'rgba(150,157,151,0)'); gradient.addColorStop(1, 'rgba(139,148,136,.48)');
+          ctx.strokeStyle = gradient; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(x, y - 18); ctx.lineTo(x, y); ctx.stroke();
+          ctx.fillStyle = 'rgba(150,156,140,.4)'; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,253,240,.7)'; ctx.beginPath(); ctx.arc(x - .5, y - .7, .8, 0, Math.PI * 2); ctx.fill();
           return true;
         });
         rings = rings.filter(ring => {
@@ -84,7 +91,7 @@
         });
       }
       function sync() {
-        cancelAnimationFrame(frame); drops = []; rings = []; previous = 0; nextDrop = 0;
+        cancelAnimationFrame(frame); drops = []; rings = []; occupied = []; previous = 0; nextDrop = 0;
         ctx.clearRect(0, 0, width, height);
         if (!media.matches && !document.hidden && !stopped) frame = requestAnimationFrame(draw);
       }

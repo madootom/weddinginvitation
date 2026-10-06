@@ -44,6 +44,6 @@ The engagement card includes the couple-supplied church watercolour. Rain uses r
 
 Music attribution is retained under an expandable Music credits disclosure. The organiser tracker uses a quiet For the organisers link. Pointer movement, clicking and wheel scrolling create drops at the pointer position using passive, throttled listeners.
 
-Pointer movement within 24 pixels of the last drop is limited to one drop per 2.2 seconds; movement beyond that area retains the existing responsive rate.
+Ripple cadence: pointer movement produces at most one drop every 550 ms, subject to the active bloom spacing guard. Each impact releases two watercolor rings, separated by about 830 ms, with diffuse sand, sage or blue-grey pigment washes.
 
-Ripple cadence: pointer movement produces at most one drop every 550 ms; within 24 px of the previous drop, every 2.2 seconds. Ambient drops occur independently every 8–14 seconds. Each impact releases two watercolor rings, separated by about 830 ms, with diffuse sand, sage or blue-grey pigment washes.
+Visible falling droplets travel for 0.7 seconds on interaction and 1–1.3 seconds naturally. Natural drops recur every 5–10 seconds. A bloom reserves its area until fully faded so slow or tightly clustered pointer movement cannot stack ripples.

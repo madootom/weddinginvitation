@@ -43,3 +43,5 @@ The grandparents blessing section was removed at the couple’s request. RSVP de
 The engagement card includes the couple-supplied church watercolour. Rain uses random drops with ripples at the exact impact points, a bounded canvas at 24 fps, and reduced-motion/hidden-tab cleanup.
 
 Music attribution is retained under an expandable Music credits disclosure. The organiser tracker uses a quiet For the organisers link. Pointer movement, clicking and wheel scrolling create drops at the pointer position using passive, throttled listeners.
+
+Pointer movement within 24 pixels of the last drop is limited to one drop per 1.2 seconds; movement beyond that area retains the existing responsive rate.

@@ -20,16 +20,18 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       const observer = new ResizeObserver(resize); observer.observe(host); resize();
-      let lastPointerDrop = -Infinity;
+      let lastPointerDrop = -Infinity, lastPointerPosition = null;
       function interact(event) {
         if (stopped || media.matches || document.hidden || !width || !height) return;
         const now = performance.now();
-        const delay = event.type === 'pointerdown' ? 80 : 160;
-        if (now - lastPointerDrop < delay) return;
         const rect = host.getBoundingClientRect();
         const x = (event.clientX - rect.left) / width, y = (event.clientY - rect.top) / height;
         if (x < 0 || x > 1 || y < 0 || y > 1) return;
-        lastPointerDrop = now; nextDrop = now + 1800;
+        const closeBy = lastPointerPosition && Math.hypot(event.clientX - lastPointerPosition.x, event.clientY - lastPointerPosition.y) < 24;
+        // Tiny pointer jitter and repeated scroll events should feel like a quiet pool.
+        const delay = closeBy ? 1200 : event.type === 'pointerdown' ? 80 : 160;
+        if (now - lastPointerDrop < delay) return;
+        lastPointerDrop = now; lastPointerPosition = {x: event.clientX, y: event.clientY}; nextDrop = now + 1800;
         drops.push({x, y, born: now, duration: event.type === 'pointerdown' ? 140 : 260});
         drops = drops.slice(-8);
       }

@@ -60,7 +60,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .page-away *, .motion-paused .rain-garden *, .motion-paused .petal { animation-play-state: paused !important; }
 @media(max-width:360px) { .guest-gate .send { font-size: 12px !important; letter-spacing: .12em; } }
 @media(prefers-reduced-motion:reduce) { .rain-garden { display:none; } }
-.marble { background-color: #f4efe5; background-blend-mode: soft-light; }
+.marble { background-blend-mode: normal; }
 @media(max-height:580px) { .guest-gate { padding-top: 64px !important; } }
 
 .butterfly-emblem { width: 78px; transform: rotate(-9deg); filter: drop-shadow(0 4px 8px #bfa77725); }

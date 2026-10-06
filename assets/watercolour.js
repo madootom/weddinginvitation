@@ -21,7 +21,8 @@
         if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      const observer = new ResizeObserver(resize); observer.observe(host); resize();
+      let resizeFrame = 0;
+      const observer = new ResizeObserver(() => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(resize); }); observer.observe(host); resize();
       let lastPointerDrop = -Infinity, lastPointerPosition = null;
       function interact(event) {
         if (stopped || media.matches || document.hidden || !width || !height) return;
@@ -64,8 +65,12 @@
             const t = age - i * .11; if (t <= 0) continue;
             const radius = 3 + ring.radius * (1 - Math.pow(1 - t, 2));
             const alpha = Math.sin(Math.min(1, t * 6) * Math.PI / 2) * Math.pow(1 - t, 2) * (.19 - i * .035);
-            ctx.strokeStyle = `rgba(142,137,108,${alpha})`; ctx.lineWidth = .75;
-            ctx.beginPath(); ctx.ellipse(ring.x * width, ring.y * height, radius, radius * .48, 0, 0, Math.PI * 2); ctx.stroke();
+            const cx = ring.x * width, cy = ring.y * height;
+            // A shaded trough, an ivory crest and a fine inner edge give the water depth.
+            for (const [offset, thickness, colour] of [[1.8, 3.8, `rgba(113,105,80,${alpha * 1.7})`], [-1, 2.7, `rgba(255,253,239,${alpha * 3.2})`], [0, .9, `rgba(154,139,102,${alpha * 1.5})`]]) {
+              ctx.strokeStyle = colour; ctx.lineWidth = thickness;
+              ctx.beginPath(); ctx.ellipse(cx, cy + offset, radius, radius * .48, 0, 0, Math.PI * 2); ctx.stroke();
+            }
           }
           return true;
         });
@@ -76,7 +81,7 @@
         if (!media.matches && !document.hidden && !stopped) frame = requestAnimationFrame(draw);
       }
       media.addEventListener('change', sync); document.addEventListener('visibilitychange', sync);
-      dispose = () => { stopped = true; cancelAnimationFrame(frame); observer.disconnect(); media.removeEventListener('change', sync); document.removeEventListener('visibilitychange', sync); for (const event of ['pointermove', 'pointerdown', 'wheel']) document.removeEventListener(event, interact); canvas.remove(); };
+      dispose = () => { stopped = true; cancelAnimationFrame(frame); observer.disconnect(); cancelAnimationFrame(resizeFrame); media.removeEventListener('change', sync); document.removeEventListener('visibilitychange', sync); for (const event of ['pointermove', 'pointerdown', 'wheel']) document.removeEventListener(event, interact); canvas.remove(); };
       sync();
     }
   };

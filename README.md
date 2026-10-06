@@ -46,4 +46,4 @@ Music attribution is retained under an expandable Music credits disclosure. The 
 
 Pointer movement within 24 pixels of the last drop is limited to one drop per 2.2 seconds; movement beyond that area retains the existing responsive rate.
 
-Ripple cadence: pointer movement produces at most one drop every 550 ms; within 24 px of the previous drop, every 2.2 seconds. Ambient drops are spaced 2.8–5 seconds apart.
+Ripple cadence: pointer movement produces at most one drop every 550 ms; within 24 px of the previous drop, every 2.2 seconds. Ambient drops occur independently every 8–14 seconds. Each impact releases two watercolor rings, separated by about 830 ms, with diffuse sand, sage or blue-grey pigment washes.

@@ -20,10 +20,10 @@ component.state.gateInput='wrong';await component.submitGate();assert.equal(reve
 component.state.gateInput='TEST';await Promise.all([component.submitGate(),component.submitGate()]);assert.equal(reveals,1);complete();
 assert.equal(component.state.unlocked,true);assert.equal(component.state.gateInput,'');assert.equal(component.renderVals().showContent,false);
 component.state.adminInput='ADMIN';component.submitAdmin(); await Promise.resolve();assert.equal(fetched,1);await Promise.resolve();await Promise.resolve();
-component.props.supabaseUrl='';component.state.form={...component.blankForm(),name:'Test',attending:'yes'};
+component.props.supabaseUrl='';component.state.form={...component.blankForm(),name:'Test',guestSide:'bride',attending:'yes'};
 await component.submitForm();assert.ok(component.state.formError);assert.equal(writes,0);
 component.state.form.attendWedding=true;await component.submitForm();await component.submitForm();assert.equal(writes,1);assert.equal(component.state.responses.length,1);
-component.resetForm();component.props.supabaseUrl='https://example.invalid';component.state.form={...component.blankForm(),name:'Test',attending:'no'};
+component.resetForm();component.props.supabaseUrl='https://example.invalid';component.state.form={...component.blankForm(),name:'Test',guestSide:'bride',attending:'no'};
 let resolveFetch;context.fetch=()=>{fetched++;return new Promise(resolve=>{resolveFetch=resolve;});};
 const sending=component.submitForm();const fetchCount=fetched;await component.submitForm();assert.equal(fetched,fetchCount);
 resolveFetch({ok:false});await sending;assert.equal(component.sending,false);assert.match(component.state.formError,/Could not save/);
@@ -57,7 +57,7 @@ for (const kind of ['engagement','wedding','both']) {
  const invite=new context.Component();context.window.InvitationAccess.resolve=async()=>kind;invite.state.gateInput='TEST';await invite.submitGate();complete();const vals=invite.renderVals();
  assert.equal(vals.showEngagement,kind!=='wedding');assert.equal(vals.showWedding,kind!=='engagement');
  assert.equal(invite.state.form.attendEngagement,kind==='engagement');assert.equal(invite.state.form.attendWedding,kind==='wedding');
- invite.state.form={...invite.blankForm(),name:'Test',attending:'yes',attendEngagement:true,attendWedding:true};
+ invite.state.form={...invite.blankForm(),name:'Test',guestSide:'bride',attending:'yes',attendEngagement:true,attendWedding:true};
  await invite.submitForm();const response=invite.state.responses[0];
  assert.equal(response.attendEngagement,kind!=='wedding');assert.equal(response.attendWedding,kind!=='engagement');
 }
@@ -113,3 +113,29 @@ component.inviteType="both"; assert.equal(component.renderVals().showSingleDate,
 component.inviteType="engagement"; assert.equal(component.renderVals().showSingleDate,true);
 component.inviteType="wedding"; assert.equal(component.renderVals().showSingleDate,true);
 assert.equal((template.match(/class="event-date"/g)||[]).length,3);
+
+// Family-side metadata round-trips through the existing backend schema.
+const organiser = new context.Component();
+const saved = organiser.formToRow({...organiser.blankForm(),name:'Example Guest',guestSide:'groom',message:'See you soon'});
+const restored = organiser.rowToForm({...saved,id:'one'});
+assert.equal(restored.guestSide,'groom'); assert.equal(restored.message,'See you soon');
+assert.equal(organiser.rowToForm({message:'Legacy note',guest_names:'Existing names'}).message,'Legacy note');
+assert.equal(organiser.rowToForm({message:'Legacy note'}).guestSide,'');
+organiser.state.responses=[restored,{id:'two',name:'Other Guest',attending:'no',guestSide:'bride',guestCount:1},{id:'old',name:'Legacy Guest',attending:'yes',attendEngagement:true,guestCount:2}];
+organiser.state.responses[0]={...restored,attending:'yes',attendWedding:true,guestCount:3};
+organiser.state.filterSide='groom'; assert.equal(organiser.renderVals().totalGuests,3); assert.equal(organiser.renderVals().responses.length,1);
+organiser.state.filterEvent='engagement'; assert.equal(organiser.renderVals().responses.length,0);
+organiser.state.filterSide='unknown'; assert.equal(organiser.renderVals().totalGuests,2);
+organiser.state.filterSide='all';organiser.state.filterEvent='all';organiser.state.responseSearch='OTHER'; assert.equal(organiser.renderVals().notAttendingCount,1);
+organiser.state.responseSearch='';organiser.state.filterAttendance='yes';assert.equal(organiser.renderVals().totalGuests,5);
+organiser.requestRemoval('one');assert.equal(organiser.state.deleteId,null,'Unauthenticated removal rejected');
+organiser.state.adminUnlocked=true;organiser.requestRemoval('one');organiser.state.deleteName='wrong';
+await organiser.removeResponse('one');assert.equal(organiser.state.responses.length,3);assert.ok(organiser.state.deleteError);
+organiser.state.deleteName='Example Guest';organiser.props.supabaseUrl='https://example.invalid';organiser.props.supabaseAnonKey='test';
+let deleteRequests=0, finishDelete;
+context.fetch=()=>{deleteRequests++;return new Promise(resolve=>finishDelete=resolve);};
+const firstDelete=organiser.removeResponse('one');await organiser.removeResponse('one');assert.equal(deleteRequests,1);
+finishDelete({ok:false});await firstDelete;assert.equal(organiser.state.responses.length,3,'Failed deletion preserves response');assert.ok(organiser.state.deleteError);
+context.fetch=async()=>({ok:true});await organiser.removeResponse('one');assert.equal(organiser.state.responses.length,2);assert.equal(organiser.state.deleteId,null);
+organiser.requestRemoval('two');organiser.renderVals().cancelDelete();assert.equal(organiser.state.deleteId,null);
+console.log('PASS: side metadata round-trip, legacy responses, combined filters and totals, exact-name delete guard, cancellation, duplicate/failure handling');

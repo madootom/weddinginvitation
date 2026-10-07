@@ -108,3 +108,18 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .lourdes-portraits img { display: block; width: 100%; aspect-ratio: 7 / 8; object-fit: cover; border-radius: 8px; }
 .lourdes-exterior { object-position: left center; }
 .lourdes-altar { object-position: right center; }
+
+/* The organiser workspace has square shoulders, keeping every control visible. */
+.invitation-card:has(.response-dashboard) { border-radius: 12px !important; }
+.invitation-card:has(.response-dashboard) .rain-garden { display: none; }
+.response-dashboard { overscroll-behavior: contain; }
+.response-filters { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-top: 24px; }
+.response-filters label { font: 500 14px/1.5 var(--sans); }
+.response-filters .fld { display: block; width: 100%; margin-top: 6px; }
+.filter-summary { font: 13px/1.6 var(--sans); color: var(--ink-soft); }
+.delete-confirm { margin-top: 14px; padding: 16px; border: 1px solid #b49b74; border-radius: 10px; font: 14px/1.65 var(--sans); background: #fffaf0; }
+.delete-confirm .fld { width: 100%; }
+.delete-actions, .side-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.side-options > button { flex: 1; }
+.delete-actions button:disabled { opacity: .45; cursor: not-allowed; }
+@media(max-width: 380px) { .response-filters { grid-template-columns: 1fr; } }

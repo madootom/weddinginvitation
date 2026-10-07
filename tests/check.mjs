@@ -49,7 +49,7 @@ let handlers={};env.document.addEventListener=(name,cb)=>handlers[name]=cb;env.d
 music.init(on=>state=on);assert.equal(played,2,'Initialization attempts autoplay');resolvePlay();await new Promise(setImmediate);assert.equal(state,true);
 music.pause();const mutedPlays=played;handlers.pointerdown({target:{closest:()=>false}});assert.equal(played,mutedPlays,'Explicit mute survives ordinary interactions');music.destroy();assert.equal(Object.keys(handlers).length,0);
 assert.ok(template.includes('2027-01-09T14:45:00+05:30'));
-assert.ok(template.includes('28 December 2026 · 11:30 AM'));
+assert.ok(template.includes('28 December 2026</span><span class="event-time">11:30 AM'));
 assert.ok(!template.includes('29 Dec, Kannur'));
 console.log('PASS: autoplay attempt, remembered mute prevents gesture retry, event cleanup, corrected ceremony countdown and engagement date');
 for (const kind of ['engagement','wedding','both']) {
@@ -108,3 +108,8 @@ assert.equal((template.match(/class="event-countdown"/g)||[]).length, 2);
 assert.ok(template.includes('Maparakarottu') && !template.includes('Maprakarrotu'));
 assert.equal(timers.parkingDetails, 'Yes, parking is available for guests at the celebration venues.');
 console.log('PASS: separate ceremony countdowns use India time, clamp after event, and replace the hero countdown');
+
+component.inviteType="both"; assert.equal(component.renderVals().showSingleDate,false);
+component.inviteType="engagement"; assert.equal(component.renderVals().showSingleDate,true);
+component.inviteType="wedding"; assert.equal(component.renderVals().showSingleDate,true);
+assert.equal((template.match(/class="event-date"/g)||[]).length,3);

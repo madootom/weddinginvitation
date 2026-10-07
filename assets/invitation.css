@@ -92,3 +92,6 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .event-countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 20px 0 14px; padding: 14px 0; border-top: 1px solid #bda57e44; border-bottom: 1px solid #bda57e44; text-align: center; }
 .countdown-number { display: block; font: 400 clamp(22px, 5vw, 28px)/1.2 var(--sans); font-variant-numeric: tabular-nums; color: #66563d; }
 .countdown-unit { display: block; margin-top: 6px; font: 500 8px/1.4 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+
+.event-date { text-align: center; margin: 3px 0 18px; color: #66563d; font-family: var(--serif); font-size: clamp(24px, 5.5vw, 30px); font-weight: 500; line-height: 1.25; }
+.event-time { display: block; margin-top: 6px; font: 500 17px/1.4 var(--sans); letter-spacing: .04em; }

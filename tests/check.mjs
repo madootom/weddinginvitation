@@ -139,3 +139,7 @@ finishDelete({ok:false});await firstDelete;assert.equal(organiser.state.response
 context.fetch=async()=>({ok:true});await organiser.removeResponse('one');assert.equal(organiser.state.responses.length,2);assert.equal(organiser.state.deleteId,null);
 organiser.requestRemoval('two');organiser.renderVals().cancelDelete();assert.equal(organiser.state.deleteId,null);
 console.log('PASS: side metadata round-trip, legacy responses, combined filters and totals, exact-name delete guard, cancellation, duplicate/failure handling');
+
+assert.ok(html.slice(0,html.indexOf('</head>')).includes('<meta property="og:title" content="A private invitation just for you">'));
+assert.ok(!html.includes('<title>Bundled Page</title>'));
+console.log('PASS: sharing title and metadata exist in the initial HTML for preview crawlers');

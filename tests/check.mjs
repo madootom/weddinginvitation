@@ -96,3 +96,15 @@ waterNow=9500;waterEvents.pointermove({type:'pointermove',clientX:103,clientY:20
 assert.ok(impacts.some(([x,y])=>Math.abs(x-103)<.01 && Math.abs(y-203)<.01),'The same area is available after its prior bloom fades');
 waterMotion.matches=true;waterChange();assert.ok(waterClears>0);waterEnv.window.InvitationAtmosphere.stop();assert.equal(waterRemoved,1);
 console.log('PASS: visible controls removed, consistent 15 November RSVP deadline, church artwork, drop-impact ripples and motion cleanup');
+component.state.now = Date.parse('2026-12-28T11:30:00+05:30');
+let timers = component.renderVals();
+assert.equal(timers.engDays, 0); assert.equal(timers.engHours, '00');
+assert.equal(timers.wedDays, 12); assert.equal(timers.wedHours, '03'); assert.equal(timers.wedMins, '15');
+component.state.now = Date.parse('2027-01-10T00:00:00+05:30');
+timers = component.renderVals();
+assert.equal(timers.engDays, 0); assert.equal(timers.wedDays, 0); assert.equal(timers.wedSecs, '00');
+assert.ok(!template.includes('{{ cdDays }}'));
+assert.equal((template.match(/class="event-countdown"/g)||[]).length, 2);
+assert.ok(template.includes('Maparakarottu') && !template.includes('Maprakarrotu'));
+assert.equal(timers.parkingDetails, 'Yes, parking is available for guests at the celebration venues.');
+console.log('PASS: separate ceremony countdowns use India time, clamp after event, and replace the hero countdown');

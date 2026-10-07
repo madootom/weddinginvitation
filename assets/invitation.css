@@ -82,3 +82,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .guest-note + .guest-note::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, #bda57e66 20%, #bda57e66 80%, transparent); }
 .guest-note .serif { color: #5f5241; }
 .guest-note .p { line-height: 1.8; margin-bottom: 0; }
+
+/* Upright lettering and event-specific countdowns for easier reading. */
+.script { font-family: var(--serif) !important; font-style: normal !important; line-height: 1.2; }
+.guest-gate .script { white-space: normal; font-size: clamp(32px, 6vw, 48px) !important; text-align: center !important; }
+#invitation-cover .script { font-size: clamp(32px, 6vw, 48px) !important; }
+#invitation-cover .script + .script { font-size: 25px !important; }
+.event-directions { display: inline-block; margin-top: 12px; font-size: 9px; border-bottom: 1px solid var(--blue); text-decoration: none; }
+.event-countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 20px 0 14px; padding: 14px 0; border-top: 1px solid #bda57e44; border-bottom: 1px solid #bda57e44; text-align: center; }
+.countdown-number { display: block; font: 400 clamp(22px, 5vw, 28px)/1.2 var(--sans); font-variant-numeric: tabular-nums; color: #66563d; }
+.countdown-unit { display: block; margin-top: 6px; font: 500 8px/1.4 var(--sans); letter-spacing: .08em; text-transform: uppercase; }

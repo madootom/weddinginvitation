@@ -143,3 +143,19 @@ console.log('PASS: side metadata round-trip, legacy responses, combined filters 
 assert.ok(html.slice(0,html.indexOf('</head>')).includes('<meta property="og:title" content="A private invitation just for you">'));
 assert.ok(!html.includes('<title>Bundled Page</title>'));
 console.log('PASS: sharing title and metadata exist in the initial HTML for preview crawlers');
+
+for (const kind of ['engagement','wedding','both']) {
+  const invite = new context.Component(); invite.inviteType = kind;
+  const values = invite.renderVals();
+  const brideFirst = kind === 'engagement';
+  assert.equal(values.firstName, brideFirst ? 'Ardra' : 'Melvin');
+  assert.equal(values.secondName, brideFirst ? 'Melvin' : 'Ardra');
+  assert.equal(values.firstRelation, brideFirst ? 'Daughter of' : 'Son of');
+  assert.equal(values.firstFamily, brideFirst ? 'Raina George & Manoj Kadamboor' : 'Gracy Tomy & Tomy Thomas Maparakarottu');
+  assert.equal(values.secondFamily, brideFirst ? 'Gracy Tomy & Tomy Thomas Maparakarottu' : 'Raina George & Manoj Kadamboor');
+  assert.equal(values.coupleNames, brideFirst ? 'Ardra & Melvin' : 'Melvin & Ardra');
+  assert.equal(values.coupleInitials, brideFirst ? 'A & M' : 'M & A');
+}
+assert.ok(template.indexOf('{{ firstName }}') < template.indexOf('{{ firstFamily }}'));
+assert.ok(template.indexOf('{{ firstFamily }}') < template.indexOf('{{ secondName }}'));
+console.log('PASS: wedding and both display Melvin and family first; engagement keeps Ardra first');
